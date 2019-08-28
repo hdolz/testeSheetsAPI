@@ -4,9 +4,13 @@ const bodyParser = require('body-parser');
 const GoogleSpreadSheet = require('google-spreadsheet');
 const { promisify } = require('util');
 const creds = require('./credenciais.json');
+const dotenv = require('dotenv');
+
+//configura modulo de leitura de variaveis de ambiente
+dotenv.config();
 
 const app = Express();
-const porta = 5000;
+const porta = process.env.PORT;
 
 //express-handlebars
 app.engine('handlebars', exphbs());
@@ -17,14 +21,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
+    console.log('Requisição GET - /');
     res.render('index', {
         nome: 'Aplicação teste de Google Sheets API'
     })
 });
 
+//insere candidatos a partir do formulário do front da aplicação
 app.get('/candidatos', (req, res) => {
+    console.log('Requisição GET - /candidatos');
     (async function accessSpreadSheet() {
-        const doc = new GoogleSpreadSheet('1BjVQnZsan3PnRZK5HyThB1-UmnrpT8XuHA9Vgv7VGn0');
+        const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
         await promisify(doc.useServiceAccountAuth)(creds);
         const info = await promisify(doc.getInfo)();
         const sheet = info.worksheets[0];
@@ -38,6 +45,30 @@ app.get('/candidatos', (req, res) => {
     })()
 });
 
+//insere candidato por meio de JSON no corpo da requisição 
+app.post('/inserirDados', (req, res) => {
+    console.log('Requisição POST - /inserir');
+    (async function inserirDados() {
+        const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
+        await promisify(doc.useServiceAccountAuth)(creds);
+        const info = await promisify(doc.getInfo)();
+        const sheet = info.worksheets[0];
+        await promisify(sheet.addRow)({
+            Nome: req.body.Nome,
+            Email: req.body.Email,
+            Interesse: req.body.Interesse
+        });
+        res.send({
+            Nome: req.body.Nome,
+            Email: req.body.Email,
+            Interesse: req.body.Interesse
+        });
+        console.log(`Nome: ${req.body.Nome},
+            Email: ${req.body.Email},
+            Interesse: ${req.body.Interesse}`);
+    })()
+});
+
 app.post('/inserir', (req, res) => {
     const row = {
         Nome: req.body.nome,
@@ -45,7 +76,7 @@ app.post('/inserir', (req, res) => {
         Interesse: req.body.interesse
     };
     (async function inserirDados() {
-        const doc = new GoogleSpreadSheet('1BjVQnZsan3PnRZK5HyThB1-UmnrpT8XuHA9Vgv7VGn0');
+        const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
         await promisify(doc.useServiceAccountAuth)(creds);
         const info = await promisify(doc.getInfo)();
         const sheet = info.worksheets[0];
