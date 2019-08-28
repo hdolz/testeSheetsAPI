@@ -1,0 +1,30 @@
+<style>
+    iframe {
+        position: absolute;
+        top: 10%;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        border: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        z-index: 999999;
+    }
+</style>
+
+<div id="chat"></div>
+
+<script src="https://unpkg.com/blip-chat-widget" type="text/javascript">
+</script>
+<script>
+    (function () {
+        window.onload = function () {
+            new BlipChat()
+                .withAppKey('YmVtb2x0cmFiYWxoZWNvbm9zY286YzE1YzQxZTgtZGViNy00OTM0LThlYmMtMmVlNzg2ZDRmYjYy')
+                .withTarget('chat')
+                .withButton({ "color": "#2CC3D5", "icon": "" })
+                .build();
+        }
+    })();
+</script>

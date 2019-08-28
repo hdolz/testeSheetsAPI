@@ -46,6 +46,10 @@ app.get('/candidatos', (req, res) => {
     
 });
 
+app.get('/chatbot',(req,res)=>{
+    res.render('chatbot');
+});
+
 //insere candidato por meio de JSON no corpo da requisição 
 app.post('/inserirDados', (req, res) => {
     console.log('Requisição POST - /inserir');
