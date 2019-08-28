@@ -1,6 +1,7 @@
 const Express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
+
 const GoogleSpreadSheet = require('google-spreadsheet');
 const { promisify } = require('util');
 const creds = require('./credenciais.json');
@@ -22,14 +23,13 @@ app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     console.log('Requisição GET - /');
-    res.render('index', {
-        nome: 'Aplicação teste de Google Sheets API'
-    })
+    res.render('index');
 });
 
 //insere candidatos a partir do formulário do front da aplicação
 app.get('/candidatos', (req, res) => {
     console.log('Requisição GET - /candidatos');
+
     (async function accessSpreadSheet() {
         const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
         await promisify(doc.useServiceAccountAuth)(creds);
@@ -38,10 +38,12 @@ app.get('/candidatos', (req, res) => {
         const rows = await promisify(sheet.getRows)({
             offset: 1
         })
+        console.log(rows);
         res.render('candidatos',{
             candidatos: rows
         });
     })()
+    
 });
 
 //insere candidato por meio de JSON no corpo da requisição 
@@ -87,3 +89,4 @@ app.post('/inserir', (req, res) => {
 app.listen(porta, () => {
     console.log(`Servidor ouvindo na porta ${porta}`);
 });
+
