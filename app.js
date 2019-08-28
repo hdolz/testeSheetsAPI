@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = Express();
-const porta = process.env.PORT;
+const porta = process.env.PORT || 5000;
 
 //express-handlebars
 app.engine('handlebars', exphbs());
@@ -38,7 +38,6 @@ app.get('/candidatos', (req, res) => {
         const rows = await promisify(sheet.getRows)({
             offset: 1
         })
-        //console.log(`Title: ${sheet.title}, Rows: ${sheet.rowCount}`);
         res.render('candidatos',{
             candidatos: rows
         });
