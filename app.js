@@ -59,7 +59,7 @@ app.post('/inserirDados', (req, res) => {
     })()
 });
 
-app.get('/teste',(req,res)=>{
+app.get('/cadastros',(req,res)=>{
     (async function accessSpreadSheet() {
         const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
         await promisify(doc.useServiceAccountAuth)(creds);
