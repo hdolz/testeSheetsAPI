@@ -1,10 +1,69 @@
-{{#each candidatos}}
-  <div class="card card-body mb-2">
-    <p>Nome: {{nome}}</p>
-    <p>Email: {{email}}</p>
-    <p>DtNasc: {{dtnasc}}</p>
-    <p>Interesse: {{interesse}}</p>
-  </div>
-{{else}}
-  <p>Não há candidatos na planilha</p>
-{{/each}}
+<div id="divCandidatos"></div>
+
+<script>
+  let dados_memoria = null;
+  window.onload = () => {
+    mensagem("Consultando cadastros...");
+    ajaxCandidatos();
+    setInterval(()=>{
+      ajaxCandidatos();
+    },5000);
+  }
+
+  function ajaxCandidatos(){
+    let xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        let jsonCandidatos = JSON.parse(xhr.response);
+        if (jsonCandidatos.length > 0) {
+          if(dados_memoria !== jsonCandidatos){
+            listarCandidatos(jsonCandidatos);
+          }
+        } else {
+          mensagem("Não há candidatos cadastrados!");
+        }
+      } else {
+        mensagem("Falha ao realizar requisição :(");
+      }
+    };
+    xhr.open('GET', 'http://localhost:5000/teste');
+    xhr.send();
+  }
+
+  function listarCandidatos(dados) {
+    let container = document.getElementById("divCandidatos");
+    limparNodes(container);
+    for (i = 0; i < dados.length; i++) {
+      let div = document.createElement("DIV");
+      div.setAttribute("class", "card card-body mb-2");
+      let nome = document.createElement("P");
+      let email = document.createElement("P");
+      let data = document.createElement("P");
+      let interesse = document.createElement("P");
+      nome.appendChild(document.createTextNode("Nome: " + dados[i].nome));
+      email.appendChild(document.createTextNode("Email: " + dados[i].email));
+      data.appendChild(document.createTextNode("DtNasc: " + dados[i].dtnasc));
+      interesse.appendChild(document.createTextNode("Interesse: " + dados[i].interesse));
+      div.appendChild(nome);
+      div.appendChild(email);
+      div.appendChild(data);
+      div.appendChild(interesse);
+      container.appendChild(div);
+    }
+    dados_memoria = dados;
+  }
+
+  function mensagem(mensagem) {
+    let container = document.getElementById("divCandidatos");
+    limparNodes(container);
+    let node = document.createElement("P");
+    node.append(document.createTextNode(mensagem));
+    container.appendChild(node);
+  }
+
+  function limparNodes(node) {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  }
+</script>

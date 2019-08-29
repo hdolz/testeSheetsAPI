@@ -29,21 +29,7 @@ app.get('/', (req, res) => {
 //insere candidatos a partir do formulário do front da aplicação
 app.get('/candidatos', (req, res) => {
     console.log('Requisição GET - /candidatos');
-
-    (async function accessSpreadSheet() {
-        const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
-        await promisify(doc.useServiceAccountAuth)(creds);
-        const info = await promisify(doc.getInfo)();
-        const sheet = info.worksheets[0];
-        const rows = await promisify(sheet.getRows)({
-            offset: 1
-        })
-        console.log(rows);
-        res.render('candidatos',{
-            candidatos: rows
-        });
-    })()
-    
+    res.render('candidatos');
 });
 
 app.get('/chatbot',(req,res)=>{
@@ -70,6 +56,19 @@ app.post('/inserirDados', (req, res) => {
             DtNasc: req.body.DtNasc,
             Interesse: req.body.Interesse
         });
+    })()
+});
+
+app.get('/teste',(req,res)=>{
+    (async function accessSpreadSheet() {
+        const doc = new GoogleSpreadSheet(process.env.SHEET_ID);
+        await promisify(doc.useServiceAccountAuth)(creds);
+        const info = await promisify(doc.getInfo)();
+        const sheet = info.worksheets[0];
+        const rows = await promisify(sheet.getRows)({
+            offset: 1
+        })
+        res.send(rows);
     })()
 });
 
