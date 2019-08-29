@@ -61,16 +61,15 @@ app.post('/inserirDados', (req, res) => {
         await promisify(sheet.addRow)({
             Nome: req.body.Nome,
             Email: req.body.Email,
+            DtNasc: req.body.DtNasc,
             Interesse: req.body.Interesse
         });
         res.send({
             Nome: req.body.Nome,
             Email: req.body.Email,
+            DtNasc: req.body.DtNasc,
             Interesse: req.body.Interesse
         });
-        console.log(`Nome: ${req.body.Nome},
-            Email: ${req.body.Email},
-            Interesse: ${req.body.Interesse}`);
     })()
 });
 
@@ -78,6 +77,7 @@ app.post('/inserir', (req, res) => {
     const row = {
         Nome: req.body.nome,
         Email: req.body.email,
+        DtNasc: formatarDataPadraoBR(req.body.dtNasc),
         Interesse: req.body.interesse
     };
     (async function inserirDados() {
@@ -86,7 +86,7 @@ app.post('/inserir', (req, res) => {
         const info = await promisify(doc.getInfo)();
         const sheet = info.worksheets[0];
         await promisify(sheet.addRow)(row);
-        res.redirect('/candidatos');
+        res.redirect('/');
     })()
 });
 
@@ -94,3 +94,6 @@ app.listen(porta, () => {
     console.log(`Servidor ouvindo na porta ${porta}`);
 });
 
+function formatarDataPadraoBR(dataPadraoUS){
+    return dataPadraoUS.split('-').reverse().join('/');
+}
