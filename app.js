@@ -92,7 +92,7 @@ app.post('/inserir', (req, res) => {
     const row = {
         Nome: req.body.nome,
         Email: req.body.email,
-        DtNasc: formatarDataPadraoBR(req.body.dtNasc),
+        //DtNasc: formatarDataPadraoBR(req.body.dtNasc),
         Interesse: req.body.interesse
     };
     (async function inserirDados() {
