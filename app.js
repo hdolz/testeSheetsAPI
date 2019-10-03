@@ -74,13 +74,13 @@ app.post('/inserirDados', (req, res) => {
         console.table({
             Nome: req.body.Nome,
             Email: req.body.Email,
-            DtNasc: req.body.DtNasc,
+            //DtNasc: req.body.DtNasc,
             Interesse: req.body.Interesse
         });
         res.send({
             Nome: req.body.Nome,
             Email: req.body.Email,
-            DtNasc: req.body.DtNasc,
+            //DtNasc: req.body.DtNasc,
             Interesse: req.body.Interesse
         });
     })()

@@ -31,6 +31,8 @@
     xhr.send();
   }
 
+  //campos de data comentados para utilizacao do projeto em minucurso - 03/10/19
+
   function listarCandidatos(dados) {
     let container = document.getElementById("divCandidatos");
     limparNodes(container);
@@ -39,15 +41,15 @@
       div.setAttribute("class", "card card-body mb-2");
       let nome = document.createElement("P");
       let email = document.createElement("P");
-      let data = document.createElement("P");
+      //let data = document.createElement("P");
       let interesse = document.createElement("P");
       nome.appendChild(document.createTextNode("Nome: " + dados[i].nome));
       email.appendChild(document.createTextNode("Email: " + dados[i].email));
-      data.appendChild(document.createTextNode("DtNasc: " + dados[i].dtnasc));
+      //data.appendChild(document.createTextNode("DtNasc: " + dados[i].dtnasc));
       interesse.appendChild(document.createTextNode("Interesse: " + dados[i].interesse));
       div.appendChild(nome);
       div.appendChild(email);
-      div.appendChild(data);
+      //div.appendChild(data);
       div.appendChild(interesse);
       container.appendChild(div);
     }
